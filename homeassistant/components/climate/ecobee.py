@@ -86,10 +86,16 @@ class Thermostat(ClimateDevice):
         self.hold_temp = hold_temp
         self._operation_list = ['auto', 'auxHeatOnly', 'cool',
                                 'heat', 'off']
+        self.update_without_throttle = False
 
     def update(self):
         """Get the latest state from the thermostat."""
-        self.data.update()
+        if self.update_without_throttle:
+            self.data.update(no_throttle=True)
+            self.update_without_throttle = False
+        else:
+            self.data.update()
+
         self.thermostat = self.data.ecobee.get_thermostat(
             self.thermostat_index)
 
@@ -116,9 +122,6 @@ class Thermostat(ClimateDevice):
             return self.target_temperature_low
         elif self.operation_mode == 'cool':
             return self.target_temperature_high
-        else:
-            return (self.target_temperature_low +
-                    self.target_temperature_high) / 2
 
     @property
     def target_temperature_low(self):
@@ -214,37 +217,50 @@ class Thermostat(ClimateDevice):
                                               "away", "indefinite")
         else:
             self.data.ecobee.set_climate_hold(self.thermostat_index, "away")
+        self.update_without_throttle = True
 
     def turn_away_mode_off(self):
         """Turn away off."""
         self.data.ecobee.resume_program(self.thermostat_index)
+        self.update_without_throttle = True
 
     def set_temperature(self, **kwargs):
         """Set new target temperature."""
         if kwargs.get(ATTR_TEMPERATURE) is not None:
             temperature = kwargs.get(ATTR_TEMPERATURE)
-            low_temp = temperature - 1
-            high_temp = temperature + 1
+            low_temp = int(temperature)
+            high_temp = int(temperature)
         if kwargs.get(ATTR_TARGET_TEMP_LOW) is not None and \
            kwargs.get(ATTR_TARGET_TEMP_HIGH) is not None:
-            low_temp = kwargs.get(ATTR_TARGET_TEMP_LOW)
-            high_temp = kwargs.get(ATTR_TARGET_TEMP_HIGH)
+            high_temp = int(kwargs.get(ATTR_TARGET_TEMP_LOW))
+            low_temp = int(kwargs.get(ATTR_TARGET_TEMP_HIGH))
 
         if self.hold_temp:
             self.data.ecobee.set_hold_temp(self.thermostat_index, low_temp,
                                            high_temp, "indefinite")
+            _LOGGER.debug("Setting ecobee hold_temp to: low=%s, is=%s, "
+                          "high=%s, is=%s", low_temp, isinstance(
+                              low_temp, (int, float)), high_temp,
+                          isinstance(high_temp, (int, float)))
         else:
             self.data.ecobee.set_hold_temp(self.thermostat_index, low_temp,
                                            high_temp)
+            _LOGGER.debug("Setting ecobee temp to: low=%s, is=%s, "
+                          "high=%s, is=%s", low_temp, isinstance(
+                              low_temp, (int, float)), high_temp,
+                          isinstance(high_temp, (int, float)))
+        self.update_without_throttle = True
 
     def set_operation_mode(self, operation_mode):
         """Set HVAC mode (auto, auxHeatOnly, cool, heat, off)."""
         self.data.ecobee.set_hvac_mode(self.thermostat_index, operation_mode)
+        self.update_without_throttle = True
 
     def set_fan_min_on_time(self, fan_min_on_time):
         """Set the minimum fan on time."""
         self.data.ecobee.set_fan_min_on_time(self.thermostat_index,
                                              fan_min_on_time)
+        self.update_without_throttle = True
 
     # Home and Sleep mode aren't used in UI yet:
 
