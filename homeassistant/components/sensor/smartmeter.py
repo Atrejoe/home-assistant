@@ -13,15 +13,15 @@ ENERGY_KILOWATTHOUR= 'kWh'
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Setup the sensors."""
     add_devices([
-		DemoSensor('Equipment Id'                  ,'TODO:ID'      ,''                 ), """ 0-0:96.1.1  """
-		DemoSensor('Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR), """ 1-0:1.8.1   """
-		DemoSensor('Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR), """ 1-0:1.8.2   """
-		DemoSensor('Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR), """ 1-0:2.8.1   """
-		DemoSensor('Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR), """ 1-0:2.8.2   """
-		DemoSensor('Current tariff'                ,'TODO:HIGH/LOW',''                 ), """ 0-0:96.14.0 """
-		DemoSensor('Current power usage'           ,0              ,POWER_KILOWATT     ), """ 1-0:1.7.0   """
-		DemoSensor('Current power produced'        ,0              ,POWER_KILOWATT     ), """ 1-0:2.7.0   """
-		DemoSensor('Gas used'                      ,0              ,VOLUME_CUBIC_METRE ), """ 0-1:24.2.1  """
+		SmartMeterSensor('Equipment Id'                  ,'TODO:ID'      ,''                 ), #0-0:96.1.1
+		SmartMeterSensor('Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR), #1-0:1.8.1  
+		SmartMeterSensor('Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR), #1-0:1.8.2  
+		SmartMeterSensor('Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR), #1-0:2.8.1  
+		SmartMeterSensor('Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR), #1-0:2.8.2  
+		SmartMeterSensor('Current tariff'                ,'TODO:HIGH/LOW',''                 ), #0-0:96.14.0
+		SmartMeterSensor('Current power usage'           ,0              ,POWER_KILOWATT     ), #1-0:1.7.0  
+		SmartMeterSensor('Current power produced'        ,0              ,POWER_KILOWATT     ), #1-0:2.7.0  
+		SmartMeterSensor('Gas used'                      ,0              ,VOLUME_CUBIC_METRE ), #0-1:24.2.1
     ])
 
 
