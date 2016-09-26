@@ -508,3 +508,6 @@ yahooweather==0.8
 
 # homeassistant.components.zeroconf
 zeroconf==0.17.6
+
+# homeassistant.components.sensor.smartmeter
+smeterd==2.4.0
