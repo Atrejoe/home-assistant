@@ -103,3 +103,9 @@ docs/build
 
 # Windows Explorer
 desktop.ini
+
+# Visual Studio
+.vs/
+home-assistant.pyproj
+home-assistant.pyproj.user
+home-assistant.sln
