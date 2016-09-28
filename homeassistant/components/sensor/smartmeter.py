@@ -17,7 +17,7 @@ from homeassistant.const import (CONF_PORT)
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 
 
-CONF_BAUDRATE = 'Baud rate'
+CONF_BAUDRATE = 'baud_rate'
 
 VOLUME_CUBIC_METRE = 'm3'
 POWER_KILOWATT = 'kW'
