@@ -19,7 +19,7 @@ from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 
 CONF_BAUDRATE = 'baud_rate'
 
-VOLUME_CUBIC_METRE = 'm3'
+VOLUME_CUBIC_METRE = 'm³'
 POWER_KILOWATT = 'kW'
 ENERGY_KILOWATTHOUR = 'kWh'
 
