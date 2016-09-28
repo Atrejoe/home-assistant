@@ -57,7 +57,7 @@ class TimedMeter(object):
         meter = SmartMeter(self._port,baudrate=self._baudrate)
         
         try:
-            self.lastpacket = meter.pythonread_one_packet()
+            self._lastpacket = meter.read_one_packet()
         except serial.SerialException as e:
             _LOGGER.error('Failed read packet: %s', str(ex))
             return False
@@ -73,7 +73,7 @@ class TimedMeter(object):
 
     @property
     def lastpacket(self):
-        return self.lastpacket
+        return self._lastpacket
 
 class SmartMeterSensor(Entity):
     """Representation of a sensor on a dutch smart meter."""
@@ -98,8 +98,9 @@ class SmartMeterSensor(Entity):
     @property
     def state(self):
         """Return the state of the sensor. (total/current power consumption/production or total gas used)"""
-        return self._meter.lastpacket
+        #return self._meter.lastpacket
         #return self._state
+        return 42
 
     @property
     def unit_of_measurement(self):
