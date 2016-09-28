@@ -4,9 +4,10 @@ Based on Demo platform: a platform that returns all data from dutch 'smart meter
 Devices inspired by: https://github.com/OrangeTux/carrot/blob/master/telegram.go
 """
 import serial
+import logging
 import voluptuous as vol
 
-REQUIREMENTS = ['smeterd==2.4.0']
+REQUIREMENTS = ['smeterd==2.5.0']
 
 from smeterd.meter import SmartMeter
 from smeterd.meter import P1Packet
