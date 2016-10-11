@@ -54,6 +54,11 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 
 class TimedMeter(object):
     def getPacket(self):
+        if self._reading:
+            _LOGGER.info('P1 is already being read')
+            return None
+
+        self._reading = True;
         meter = SmartMeter(self._port,baudrate=self._baudrate)
         
         try:
@@ -63,11 +68,14 @@ class TimedMeter(object):
             return False
         finally:
             meter.disconnect()
+            self._reading = False;
         return None
 
     def __init__(self, config, **kwargs):
         self._port = config.get(CONF_PORT)
         self._baudrate = config.get(CONF_BAUDRATE)
+
+        getPacket();
 
         return None
 
@@ -88,7 +96,7 @@ class SmartMeterSensor(Entity):
     @property
     def should_poll(self):
         """TODO: figure out how to implement push"""
-        return False
+        return True
 
     @property
     def name(self):
@@ -100,6 +108,10 @@ class SmartMeterSensor(Entity):
         """Return the state of the sensor. (total/current power consumption/production or total gas used)"""
         #return self._meter.lastpacket
         #return self._state
+        if self._meter.lastpacket is None:
+            _LOGGER.warning('P1 packet has not been read yet: %s', str(ex))
+            return None
+
         try:
             self._meter.lastpacket['kwh']['current_consumed']
         except BaseException as ex:
