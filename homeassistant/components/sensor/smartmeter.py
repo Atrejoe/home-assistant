@@ -75,7 +75,7 @@ class TimedMeter(object):
         self._port = config.get(CONF_PORT)
         self._baudrate = config.get(CONF_BAUDRATE)
 
-        getPacket();
+        self.getPacket();
 
         return None
 
