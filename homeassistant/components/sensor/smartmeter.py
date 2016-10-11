@@ -109,7 +109,7 @@ class SmartMeterSensor(Entity):
         #return self._meter.lastpacket
         #return self._state
         if self._meter.lastpacket is None:
-            _LOGGER.warning('P1 packet has not been read yet: %s', str(ex))
+            _LOGGER.warning('P1 packet has not been read yet: %s')
             return None
 
         try:
