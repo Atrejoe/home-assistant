@@ -72,6 +72,7 @@ class TimedMeter(object):
         return None
 
     def __init__(self, config, **kwargs):
+        self._reading = False;
         self._port = config.get(CONF_PORT)
         self._baudrate = config.get(CONF_BAUDRATE)
 
