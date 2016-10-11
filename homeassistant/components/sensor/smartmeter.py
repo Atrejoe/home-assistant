@@ -55,7 +55,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 class TimedMeter(object):
     def getPacket(self):
         if self._reading:
-            _LOGGER.info('P1 is already being read')
+            _LOGGER.info('P1 packet is already being read')
             return None
 
         self._reading = True;
@@ -64,10 +64,14 @@ class TimedMeter(object):
         try:
             self._lastpacket = meter.read_one_packet()
         except serial.SerialException as ex:
-            _LOGGER.error('Failed read packet: %s', str(ex))
-            return False
+            _LOGGER.error('Failed to read packet: %s', str(ex))
+            return None
+        except BaseException as ex:
+            _LOGGER.error('Failed to read packet %s', str(ex))
+            return None
         finally:
             meter.disconnect()
+            _LOGGER.info('Done reading packet')
             self._reading = False;
         return None
 
@@ -109,7 +113,7 @@ class SmartMeterSensor(Entity):
         #return self._meter.lastpacket
         #return self._state
         if self._meter.lastpacket is None:
-            _LOGGER.warning('P1 packet has not been read yet: %s')
+            _LOGGER.warning('P1 packet has not been read yet.')
             return None
 
         try:
