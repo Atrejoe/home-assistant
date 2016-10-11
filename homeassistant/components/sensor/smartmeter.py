@@ -58,7 +58,7 @@ class TimedMeter(object):
         
         try:
             self._lastpacket = meter.read_one_packet()
-        except serial.SerialException as e:
+        except serial.SerialException as ex:
             _LOGGER.error('Failed read packet: %s', str(ex))
             return False
         finally:
@@ -100,7 +100,11 @@ class SmartMeterSensor(Entity):
         """Return the state of the sensor. (total/current power consumption/production or total gas used)"""
         #return self._meter.lastpacket
         #return self._state
-        return 42
+        try:
+            self._meter.lastpacket['kwh']['current_consumed']
+        except BaseException as ex:
+            _LOGGER.error('Failed to read current power usage: %s', str(ex))
+            return 42
 
     @property
     def unit_of_measurement(self):
