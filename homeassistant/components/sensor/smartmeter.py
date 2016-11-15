@@ -118,7 +118,7 @@ class SmartMeterSensor(Entity):
             return None
 
         try:
-            self._meter.lastpacket['kwh']['current_consumed']
+            return self._meter.lastpacket['kwh']['current_consumed']
         except BaseException as ex:
             _LOGGER.error('Failed to read current power usage: %s', str(ex))
             return 42
