@@ -39,15 +39,15 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     meter = TimedMeter(config)
 
     add_devices([
-        SmartMeterSensor(meter, 'Equipment Id'                  ,'TODO:ID'      ,''                     ,'mdi:speedometer', lambda x: x['kwh']['eid']               ), #0-0:96.1.1
-		SmartMeterSensor(meter, 'Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['low']['consumed']   ), #1-0:1.8.1
-		SmartMeterSensor(meter, 'Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['high']['consumed']  ), #1-0:1.8.2
-		SmartMeterSensor(meter, 'Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['low']['produced']   ), #1-0:2.8.1
-		SmartMeterSensor(meter, 'Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['high']['produced']  ), #1-0:2.8.2
-		SmartMeterSensor(meter, 'Current tariff'                ,'TODO:HIGH/LOW',''                     ,'mdi:speedometer', lambda x: x['kwh']['tariff']            ), #0-0:96.14.0
-		SmartMeterSensor(meter, 'Current power usage'           ,0              ,POWER_KILOWATT         ,'mdi:speedometer', lambda x: x['kwh']['current_consumed']  ), #1-0:1.7.0
-		SmartMeterSensor(meter, 'Current power produced'        ,0              ,POWER_KILOWATT         ,'mdi:speedometer', lambda x: x['kwh']['current_produced']  ), #1-0:2.7.0
-		SmartMeterSensor(meter, 'Gas used'                      ,0              ,VOLUME_CUBIC_METRE     ,'mdi:speedometer', lambda x: x['gas']['total']             )  #0-1:24.2.1
+        SmartMeterSensor(meter, 'Equipment Id'                  ,'TODO:ID'      ,''                     ,'mdi:pound', lambda x: x['kwh']['eid']                                 ), #0-0:96.1.1
+		SmartMeterSensor(meter, 'Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:flash', lambda x: x['kwh']['low']['consumed']                     ), #1-0:1.8.1
+		SmartMeterSensor(meter, 'Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:flash', lambda x: x['kwh']['high']['consumed']                    ), #1-0:1.8.2
+		SmartMeterSensor(meter, 'Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:flash', lambda x: x['kwh']['low']['produced']                     ), #1-0:2.8.1
+		SmartMeterSensor(meter, 'Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR    ,'mdi:flash', lambda x: x['kwh']['high']['produced']                    ), #1-0:2.8.2
+		SmartMeterSensor(meter, 'Current tariff'                ,'TODO:HIGH/LOW',''                     ,'mdi:flash', lambda x: 'Low' if (x['kwh']['tariff'] == 2) else 'High'  ), #0-0:96.14.0
+		SmartMeterSensor(meter, 'Current power usage'           ,0              ,POWER_KILOWATT         ,'mdi:flash', lambda x: x['kwh']['current_consumed']                    ), #1-0:1.7.0
+		SmartMeterSensor(meter, 'Current power produced'        ,0              ,POWER_KILOWATT         ,'mdi:flash', lambda x: x['kwh']['current_produced']                    ), #1-0:2.7.0
+		SmartMeterSensor(meter, 'Gas used'                      ,0              ,VOLUME_CUBIC_METRE     ,'mdi:fire',  lambda x: x['gas']['total']                               )  #0-1:24.2.1
     ])
 
     return True
