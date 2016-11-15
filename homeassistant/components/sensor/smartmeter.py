@@ -39,15 +39,15 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     meter = TimedMeter(config)
 
     add_devices([
-        SmartMeterSensor(meter, 'Equipment Id'                  ,'TODO:ID'      ,''), #0-0:96.1.1
-		SmartMeterSensor(meter, 'Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR), #1-0:1.8.1
-		SmartMeterSensor(meter, 'Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR), #1-0:1.8.2
-		SmartMeterSensor(meter, 'Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR), #1-0:2.8.1
-		SmartMeterSensor(meter, 'Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR), #1-0:2.8.2
-		SmartMeterSensor(meter, 'Current tariff'                ,'TODO:HIGH/LOW',''), #0-0:96.14.0
-		SmartMeterSensor(meter, 'Current power usage'           ,0              ,POWER_KILOWATT), #1-0:1.7.0
-		SmartMeterSensor(meter, 'Current power produced'        ,0              ,POWER_KILOWATT), #1-0:2.7.0
-		SmartMeterSensor(meter, 'Gas used'                      ,0              ,VOLUME_CUBIC_METRE) #0-1:24.2.1
+        SmartMeterSensor(meter, 'Equipment Id'                  ,'TODO:ID'      ,''                     ,'mdi:speedometer'), #0-0:96.1.1
+		SmartMeterSensor(meter, 'Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:1.8.1
+		SmartMeterSensor(meter, 'Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:1.8.2
+		SmartMeterSensor(meter, 'Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:2.8.1
+		SmartMeterSensor(meter, 'Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:2.8.2
+		SmartMeterSensor(meter, 'Current tariff'                ,'TODO:HIGH/LOW',''                     ,'mdi:speedometer'), #0-0:96.14.0
+		SmartMeterSensor(meter, 'Current power usage'           ,0              ,POWER_KILOWATT         ,'mdi:speedometer'), #1-0:1.7.0
+		SmartMeterSensor(meter, 'Current power produced'        ,0              ,POWER_KILOWATT         ,'mdi:speedometer'), #1-0:2.7.0
+		SmartMeterSensor(meter, 'Gas used'                      ,0              ,VOLUME_CUBIC_METRE     ,'mdi:speedometer')  #0-1:24.2.1
     ])
 
     return True
@@ -90,12 +90,13 @@ class TimedMeter(object):
 class SmartMeterSensor(Entity):
     """Representation of a sensor on a dutch smart meter."""
 
-    def __init__(self, meter, name, state, unit_of_measurement):
+    def __init__(self, meter, name, state, unit_of_measurement, icon):
         """Initialize the sensor."""
         self._meter = meter
         self._name = name
         self._state = state
         self._unit_of_measurement = unit_of_measurement
+        self._icon = icon
 
     @property
     def should_poll(self):
@@ -126,6 +127,11 @@ class SmartMeterSensor(Entity):
     def unit_of_measurement(self):
         """Return the unit this state is expressed in."""
         return self._unit_of_measurement
+
+    @property
+    def icon(self):
+        """Return the icon to use in the frontend, if any."""
+        return self._icon
 
     def update(self):
         return self._meter.getPacket()
