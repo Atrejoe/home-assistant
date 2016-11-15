@@ -39,15 +39,15 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     meter = TimedMeter(config)
 
     add_devices([
-        SmartMeterSensor(meter, 'Equipment Id'                  ,'TODO:ID'      ,''                     ,'mdi:speedometer'), #0-0:96.1.1
-		SmartMeterSensor(meter, 'Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:1.8.1
-		SmartMeterSensor(meter, 'Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:1.8.2
-		SmartMeterSensor(meter, 'Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:2.8.1
-		SmartMeterSensor(meter, 'Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer'), #1-0:2.8.2
-		SmartMeterSensor(meter, 'Current tariff'                ,'TODO:HIGH/LOW',''                     ,'mdi:speedometer'), #0-0:96.14.0
-		SmartMeterSensor(meter, 'Current power usage'           ,0              ,POWER_KILOWATT         ,'mdi:speedometer'), #1-0:1.7.0
-		SmartMeterSensor(meter, 'Current power produced'        ,0              ,POWER_KILOWATT         ,'mdi:speedometer'), #1-0:2.7.0
-		SmartMeterSensor(meter, 'Gas used'                      ,0              ,VOLUME_CUBIC_METRE     ,'mdi:speedometer')  #0-1:24.2.1
+        SmartMeterSensor(meter, 'Equipment Id'                  ,'TODO:ID'      ,''                     ,'mdi:speedometer', lambda x: x['kwh']['eid']               ), #0-0:96.1.1
+		SmartMeterSensor(meter, 'Power used : low tariff'       ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['low']['consumed']   ), #1-0:1.8.1
+		SmartMeterSensor(meter, 'Power used : normal tariff'    ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['high']['consumed']  ), #1-0:1.8.2
+		SmartMeterSensor(meter, 'Power produced : low tariff'   ,0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['low']['produced']   ), #1-0:2.8.1
+		SmartMeterSensor(meter, 'Power produced : normal tariff',0              ,ENERGY_KILOWATTHOUR    ,'mdi:speedometer', lambda x: x['kwh']['high']['produced']  ), #1-0:2.8.2
+		SmartMeterSensor(meter, 'Current tariff'                ,'TODO:HIGH/LOW',''                     ,'mdi:speedometer', lambda x: x['kwh']['tariff']            ), #0-0:96.14.0
+		SmartMeterSensor(meter, 'Current power usage'           ,0              ,POWER_KILOWATT         ,'mdi:speedometer', lambda x: x['kwh']['current_consumed']  ), #1-0:1.7.0
+		SmartMeterSensor(meter, 'Current power produced'        ,0              ,POWER_KILOWATT         ,'mdi:speedometer', lambda x: x['kwh']['current_produced']  ), #1-0:2.7.0
+		SmartMeterSensor(meter, 'Gas used'                      ,0              ,VOLUME_CUBIC_METRE     ,'mdi:speedometer', lambda x: x['gas']['total']             )  #0-1:24.2.1
     ])
 
     return True
@@ -90,13 +90,14 @@ class TimedMeter(object):
 class SmartMeterSensor(Entity):
     """Representation of a sensor on a dutch smart meter."""
 
-    def __init__(self, meter, name, state, unit_of_measurement, icon):
+    def __init__(self, meter, name, state, unit_of_measurement, icon, valueExpression):
         """Initialize the sensor."""
         self._meter = meter
         self._name = name
         self._state = state
         self._unit_of_measurement = unit_of_measurement
         self._icon = icon
+        self._valueExpression = valueExpression
 
     @property
     def should_poll(self):
@@ -118,7 +119,7 @@ class SmartMeterSensor(Entity):
             return None
 
         try:
-            return self._meter.lastpacket['kwh']['current_consumed']
+            return self._valueExpression(self._meter.lastpacket)
         except BaseException as ex:
             _LOGGER.error('Failed to read current power usage: %s', str(ex))
             return 42
