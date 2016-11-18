@@ -7,7 +7,7 @@ import serial
 import logging
 import voluptuous as vol
 
-REQUIREMENTS = ['smeterd==2.5.0']
+REQUIREMENTS = ['smeterd==2.5.1']
 
 from smeterd.meter import SmartMeter
 from smeterd.meter import P1Packet
